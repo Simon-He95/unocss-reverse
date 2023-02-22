@@ -1,42 +1,36 @@
-import { describe, it, expect } from 'vitest'
-import { generator } from '../src/generator'
-describe("height", () => {
-  it('height:1px', () => {
-    expect(generator("height:1px")).toBe("h-1px")
+import { describe, expect, it } from 'vitest'
+import { transformToUnocss } from '../src'
+
+describe('should', () => {
+  it('px', () => {
+    expect(transformToUnocss('height:10px')).toMatchInlineSnapshot('"h-10px"')
+  })
+  it('em', () => {
+    expect(transformToUnocss('height:10em')).toMatchInlineSnapshot('"h-10em"')
+  })
+  it('rem', () => {
+    expect(transformToUnocss('height:10rem')).toMatchInlineSnapshot('"h-10rem"')
+  })
+  it('max-content', () => {
+    expect(transformToUnocss('height: max-content')).toMatchInlineSnapshot('"h-max"')
+  })
+  it('min-content', () => {
+    expect(transformToUnocss('height: min-content')).toMatchInlineSnapshot('"h-min"')
+  })
+  it('fit-content', () => {
+    expect(transformToUnocss(' height:fit-content')).toBe('h-fit')
+  })
+  it('auto', () => {
+    expect(transformToUnocss(' height:auto')).toBe('h-auto')
+  })
+  it('calc', () => {
+    expect(transformToUnocss(' height:calc(100% - 50px)')).toBe('h-[calc(100%-50px)]')
+  })
+  it('calc not space', () => {
+    expect(transformToUnocss(' height:calc(100%-50px)')).toBe('h-[calc(100%-50px)]')
   })
 
-  it('height:1em', () => {
-    expect(generator("height:1em")).toBe("h-1em")
-  })
-
-  it('height:1rem', () => {
-    expect(generator("height:1rem")).toBe("h-4")
-  })
-
-  it('height: max-content', () => {
-    expect(generator("height: max-content")).toBe("h-max")
-  })
-
-  it(' height:min-content', () => {
-    expect(generator(" height:min-content")).toBe("h-min")
-  })
-
-  it(' height:fit-content', () => {
-    expect(generator(" height:fit-content")).toBe("h-fit")
-  })
-
-  it(' height:auto', () => {
-    expect(generator(" height:auto")).toBe("h-auto")
-  })
-  it(' height:calc(100% - 50px)', () => {
-    expect(generator(" height:calc(100% - 50px)")).toBe("h-[calc(100%-50px)]")
-  })
-
-  it(' height:calc(100%-50px)', () => {
-    expect(generator(" height:calc(100%-50px)")).toBe("h-[calc(100%-50px)]")
-  })
-
-  it(' height:calc(100%  -  50px)', () => {
-    expect(generator(" height:calc(100%  -  50px)")).toBe("h-[calc(100%-50px)]")
+  it('calc space', () => {
+    expect(transformToUnocss(' height:calc(100%  -  50px)')).toBe('h-[calc(100%-50px)]')
   })
 })
